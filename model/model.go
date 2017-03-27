@@ -50,7 +50,7 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 
 	result_id := 0
 	for rows.Next() {
-		for i:= range columns {
+		for i := range columns {
 			valuePtrs[i] = &values[i]
 		}
 
@@ -137,7 +137,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 			query = "CREATE TABLE "
 			query = query + tablename + " ("
 			var subquery string
-			var i int 
+			var i int
 			for key, val := range columnames {
 				subquery = subquery + key + " " + val
 				i = i + 1
@@ -153,7 +153,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 		{
 			query = "SELECT "
 			var subquery string
-			var i int 
+			var i int
 			for _, val := range columnames {
 				subquery = subquery + " " + val
 				i = i + 1
@@ -180,7 +180,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 		{
 			query = "ALTER TABLE "
 			var subquery string
-			var i int 
+			var i int
 			query = query + tablename + " "
 			for key, val := range properties {
 				subquery = subquery + "ADD COLUMN " + key + " " + val
@@ -218,7 +218,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 			query = "INSERT INTO " + tablename
 			var colquery string = "("
 			var valquery string = " VALUES ("
-			var i int 
+			var i int
 			for key, val := range columnames {
 				colquery += key
 				valquery += val
