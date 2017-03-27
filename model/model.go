@@ -30,7 +30,6 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 
 	stmtIns, err := db.Prepare(query)
 	if err != nil {
-		panic(err)
 		return result, err
 	}
 	defer stmtIns.Close()
@@ -39,7 +38,6 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 	columns, err := rows.Columns()
 	colcount := len(columns)
 	if err != nil {
-		panic(err)
 		return result, err
 	}
 	defer rows.Close()
