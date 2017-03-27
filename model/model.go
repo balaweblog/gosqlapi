@@ -3,10 +3,10 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
-/* ExecuteNonQuery Execute Non Query from sql database.*/
+/*ExecuteNonQuery Execute Non Query from sql database.*/
 func ExecuteNonQuery(db *sql.DB, query string) (interface{}, error) {
 	var result interface{}
 	stmtIns, err := db.Prepare(query)
@@ -24,7 +24,7 @@ func ExecuteNonQuery(db *sql.DB, query string) (interface{}, error) {
 	return result, err
 }
 
-/* ExecuteQuery  Execute Query from sql database */
+/*ExecuteQuery  Execute Query from sql database */
 func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 
 	result := map[int]map[string]string{}
@@ -50,13 +50,13 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 
 	result_id := 0
 	for rows.Next() {
-		for i, _ := range columns {
+		for i:= range columns {
 			valuePtrs[i] = &values[i]
 		}
 
 		rows.Scan(valuePtrs...)
 
-		tmp_struct := map[string]string{}
+		tmpstruct := map[string]string{}
 		for i, col := range columns {
 			var v interface{}
 			val := values[i]
@@ -66,16 +66,16 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 			} else {
 				v = val
 			}
-			tmp_struct[col] = fmt.Sprintf("%s", v)
+			tmpstruct[col] = fmt.Sprintf("%s", v)
 		}
 
-		result[result_id] = tmp_struct
+		result[result_id] = tmpstruct
 		result_id++
 	}
 	return result, err
 }
 
-/* ParseQuery parse sql query for the sql input */
+/*ParseQuery parse sql query for the sql input */
 func ParseQuery(input map[string]interface{}, parsetype string) string {
 	var tablename string
 	columnames := make(map[string]string)
@@ -106,12 +106,12 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 				for _, innerval := range value.([]interface{}) {
 					switch innerval.(type) {
 					case map[string]interface{}:
-						tmp_struct := map[string]string{}
+						tmpstruct := map[string]string{}
 						for key, val := range innerval.(map[string]interface{}) {
-							tmp_struct[key] = val.(string)
+							tmpstruct[key] = val.(string)
 						}
 						i += 1
-						wherenames[i] = tmp_struct
+						wherenames[i] = tmpstruct
 					}
 				}
 			}
@@ -137,7 +137,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 			query = "CREATE TABLE "
 			query = query + tablename + " ("
 			var subquery string
-			var i int = 0
+			var i int 
 			for key, val := range columnames {
 				subquery = subquery + key + " " + val
 				i = i + 1
@@ -153,7 +153,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 		{
 			query = "SELECT "
 			var subquery string
-			var i int = 0
+			var i int 
 			for _, val := range columnames {
 				subquery = subquery + " " + val
 				i = i + 1
@@ -180,7 +180,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 		{
 			query = "ALTER TABLE "
 			var subquery string
-			var i int = 0
+			var i int 
 			query = query + tablename + " "
 			for key, val := range properties {
 				subquery = subquery + "ADD COLUMN " + key + " " + val
@@ -218,7 +218,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 			query = "INSERT INTO " + tablename
 			var colquery string = "("
 			var valquery string = " VALUES ("
-			var i int = 0
+			var i int 
 			for key, val := range columnames {
 				colquery += key
 				valquery += val
@@ -237,7 +237,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 	return query
 }
 
-/* open up new connection from sql database */
+/*NewConnection open up new connection from sql database */
 func NewConnection() (db *sql.DB, err error) {
 	db, err = sql.Open("mysql", "root:dhiva@tcp(192.168.99.100:3306)/devdb")
 	return
