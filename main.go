@@ -1,5 +1,4 @@
-deleted file mode 100644
-@@ -1,108 +0,0 @@
+
 -package main
 -
 -import (

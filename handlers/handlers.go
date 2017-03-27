@@ -1,5 +1,4 @@
-deleted file mode 100644
-@@ -1,318 +0,0 @@
+
 -package handlers
 -
 -import (
