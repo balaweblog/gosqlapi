@@ -48,7 +48,7 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 	values := make([]interface{}, colcount)
 	valuePtrs := make([]interface{}, colcount)
 
-	result_id := 0
+	resultid := 0
 	for rows.Next() {
 		for i := range columns {
 			valuePtrs[i] = &values[i]
@@ -69,8 +69,8 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 			tmpstruct[col] = fmt.Sprintf("%s", v)
 		}
 
-		result[result_id] = tmpstruct
-		result_id++
+		result[resultid] = tmpstruct
+		resultid++
 	}
 	return result, err
 }

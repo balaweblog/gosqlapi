@@ -15,7 +15,7 @@ var (
 	ErrParsingInputRequest   = errors.New("http: error parsing input request")
 )
 
-/* create table in sql */
+/*Createtable create table in sql */
 func Createtable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -48,7 +48,7 @@ func Createtable(db *sql.DB) http.Handler {
 	})
 }
 
-/* select from table in sql */
+/*Selecttable select from table in sql */
 func Selecttable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -83,7 +83,7 @@ func Selecttable(db *sql.DB) http.Handler {
 	})
 }
 
-/* alter table and columns in  sql */
+/*Altertable alter table and columns in  sql */
 func Altertable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -120,7 +120,7 @@ func Altertable(db *sql.DB) http.Handler {
 	})
 }
 
-/* insert into table in sql */
+/*Inserttable insert into table in sql */
 func Inserttable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -157,7 +157,7 @@ func Inserttable(db *sql.DB) http.Handler {
 	})
 }
 
-/* Show all databases in the sql */
+/*Showalldatabases Show all databases in the sql */
 func Showalldatabases(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -187,7 +187,7 @@ func Showalldatabases(db *sql.DB) http.Handler {
 	})
 }
 
-/* what database in use */
+/*CurrentInUseDB what database in use */
 func CurrentInUseDB(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -217,7 +217,7 @@ func CurrentInUseDB(db *sql.DB) http.Handler {
 	})
 }
 
-/* show all tables in the database */
+/*ShowalltablesinDb show all tables in the database */
 func ShowalltablesinDb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -247,7 +247,7 @@ func ShowalltablesinDb(db *sql.DB) http.Handler {
 	})
 }
 
-/* describle individual table in the database */
+/*Describetableindb describle individual table in the database */
 func Describetableindb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -282,7 +282,7 @@ func Describetableindb(db *sql.DB) http.Handler {
 	})
 }
 
-/* explain table in sql */
+/*ExplaintableinDb explain table in sql */
 func ExplaintableinDb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
