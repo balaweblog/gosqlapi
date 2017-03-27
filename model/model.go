@@ -115,7 +115,7 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 					}
 				}
 			}
-		case "properites":
+		case "properties":
 			{
 				for _, innerval := range value.([]interface{}) {
 					switch innerval.(type) {
