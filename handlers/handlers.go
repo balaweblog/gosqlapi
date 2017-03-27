@@ -10,8 +10,11 @@ import (
 )
 
 var (
+    //Error Invalid Request 
 	ErrInvalidInputRequest   = errors.New("http: error reading input request")
+    //Error Invalid Output Response
 	ErrInvalidOutputResponse = errors.New("http: error formatting response")
+    //Error Parsing Input Request
 	ErrParsingInputRequest   = errors.New("http: error parsing input request")
 )
 
