@@ -11,7 +11,6 @@ func ExecuteNonQuery(db *sql.DB, query string) (interface{}, error) {
 	var result interface{}
 	stmtIns, err := db.Prepare(query)
 	if err != nil {
-		panic(err)
 		return result, err
 	}
 
@@ -70,7 +69,7 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 		}
 
 		result[resultid] = tmpstruct
-		resultid++
+		resultpanicid++
 	}
 	return result, err
 }
