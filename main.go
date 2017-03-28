@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gosqlapi/handlers"
-	"gosqlapi/model"
+	"balaweblog/gosqlapi/handlers"
+	"balaweblog/gosqlapi/model"
 	"log"
 	"net/http"
 )
