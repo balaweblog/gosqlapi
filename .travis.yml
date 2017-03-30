@@ -1,6 +1,7 @@
 language: go
 sudo: false
+GOPATH="$HOME/gopath/src/github.com/balaweblog/gosqlapi/"
 before_script:
-export GOPATH=$HOME/gopath/src/github.com/balaweblog/gosqlapi/
+
 
   - go vet ./...
