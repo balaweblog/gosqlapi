@@ -4,8 +4,10 @@ go:
 - 1.6.2
 env:
   global:
+
+before_install:
   - PATH="$HOME/gopath/bin:$HOME/bin:$PATH"
   - GOPATH ="$HOME/gopath/src/github.com/balaweblog/gosqlapi;$HOME/gopath"
-before_install:
+  -echo gopath
 - go get github.com/go-sql-driver/mysql
 - go get golang.org/x/tools/cmd/cover
