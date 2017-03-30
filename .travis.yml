@@ -9,4 +9,4 @@ before_install:
 - go get github.com/go-sql-driver/mysql
 - go get golang.org/x/tools/cmd/cover
 install:
-- gometalgosqlapiinter --install
+- gosqlapi --install
