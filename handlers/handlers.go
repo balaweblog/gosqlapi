@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"model"
+	"gosqlapi/model"
 	"io/ioutil"
 	"net/http"
 )

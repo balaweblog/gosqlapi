@@ -1,8 +1,8 @@
 package main
 
 import (
-	"handlers"
-	"model"
+	"gosqlapi/handlers"
+	"gosqlapi/model"
 	"log"
 	"net/http"
 )

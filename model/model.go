@@ -3,8 +3,12 @@ package model
 import (
 	"database/sql"
 	"fmt"
+<<<<<<< HEAD
+	_ "github.com/go-sql-driver/mysql"
+=======
 	
 	"github.com/go-sql-driver/mysql"
+>>>>>>> 3385a1f529a6b74c4f9be9cf063576b893562999
 )
 
 /*ExecuteNonQuery Execute Non Query from sql database.*/
@@ -68,20 +72,35 @@ func ExecuteQuery(db *sql.DB, query string) (map[int]map[string]string, error) {
 		}
 
 		result[resultid] = tmpstruct
-		resultpanicid++
+		resultid++
 	}
 	return result, err
 }
 
 /*ParseQuery parse sql query for the sql input */
 func ParseQuery(input map[string]interface{}, parsetype string) string {
+
+	tablename, columnames, wherenames, properties := readinputvariables(input)
+
+	query := parsewritequery(tablename, columnames, wherenames, properties, parsetype)
+
+	return query
+}
+
+/*NewConnection open up new connection from sql database */
+func NewConnection() (db *sql.DB, err error) {
+	db, err = sql.Open("mysql", "root:dhiva@tcp(192.168.99.100:3306)/devdb")
+	return
+}
+
+/* readinputvariables from the given string */
+func readinputvariables(input map[string]interface{}) (string, map[string]string, map[int]map[string]string, map[string]string) {
 	var tablename string
 	columnames := make(map[string]string)
 	wherenames := map[int]map[string]string{}
 	properties := make(map[string]string)
 
 	for key, value := range input {
-
 		switch key {
 		case "table":
 			{
@@ -126,7 +145,11 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 			}
 		}
 	}
+	return tablename, columnames, wherenames, properties
+}
 
+/*parsewritequery */
+func parsewritequery(tablename string, columnames map[string]string, wherenames map[int]map[string]string, properties map[string]string, parsetype string) string {
 	var query string
 	switch parsetype {
 	case "CREATE":
@@ -233,10 +256,4 @@ func ParseQuery(input map[string]interface{}, parsetype string) string {
 		}
 	}
 	return query
-}
-
-/*NewConnection open up new connection from sql database */
-func NewConnection() (db *sql.DB, err error) {
-	db, err = sql.Open("mysql", "root:dhiva@tcp(192.168.99.100:3306)/devdb")
-	return
 }
