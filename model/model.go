@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
+    //gosqldriver
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -149,7 +150,6 @@ func parsewritequery(tablename string, columnames map[string]string, wherenames 
 	switch parsetype {
 	case "CREATE":
 		{
-
 			query = "CREATE TABLE "
 			query = query + tablename + " ("
 			var subquery string
