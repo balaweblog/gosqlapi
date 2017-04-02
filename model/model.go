@@ -3,12 +3,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
-<<<<<<< HEAD
 	_ "github.com/go-sql-driver/mysql"
-=======
-	
-	"github.com/go-sql-driver/mysql"
->>>>>>> 3385a1f529a6b74c4f9be9cf063576b893562999
 )
 
 /*ExecuteNonQuery Execute Non Query from sql database.*/
