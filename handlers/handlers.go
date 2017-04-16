@@ -16,8 +16,8 @@ var (
 	ErrInvalidOutputResponse = errors.New("http: error formatting response")
 	//ErrParsingInputRequest Error Parsing Input Request
 	ErrParsingInputRequest = errors.New("http: error parsing input request")
-	//No records found
-	NoRecordsFound = errors.New("No Records found")
+	//ErrNoRecordsFound No records found
+	ErrNoRecordsFound = errors.New("No Records found")
 )
 
 /*Showalldatabases Show all databases in the sql */
@@ -42,7 +42,7 @@ func Showalldatabases(db *sql.DB) http.Handler {
 			return
 		}
 		if len(val) < 0 {
-			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
+			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
 			return
 		}
 		successmessagequery(w, val, http.StatusOK)
@@ -71,7 +71,7 @@ func CurrentInUseDB(db *sql.DB) http.Handler {
 			return
 		}
 		if len(val) < 0 {
-			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
+			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
 			return
 		}
 		successmessagequery(w, val, http.StatusOK)
@@ -100,7 +100,7 @@ func ShowalltablesinDb(db *sql.DB) http.Handler {
 			return
 		}
 		if len(val) < 0 {
-			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
+			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
 			return
 		}
 		successmessagequery(w, val, http.StatusOK)
