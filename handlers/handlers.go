@@ -547,11 +547,11 @@ type ErrorResponse struct {
 	Code    int
 	Message string
 }
-/*Request */
+/*Request  input request json*/
 type Request struct {
 	Data map[string]interface{} `json:"data"`
 }
-/*parserequest */
+/*parserequest -parse input request*/
 func parserequest(req []byte) (Request, error) {
 	var request Request
 	err := json.Unmarshal(req, &request)
@@ -561,7 +561,7 @@ func parserequest(req []byte) (Request, error) {
 	return request, nil
 }
 
-/* success response message */
+/*successmessagequery success response message */
 func successmessagequery(w http.ResponseWriter, msg map[int]map[string]string, errorcode int) {
 	response := Responsequery{Status: "success", Data: msg}
 	message, _ := json.MarshalIndent(response, "", "\t")
@@ -570,7 +570,7 @@ func successmessagequery(w http.ResponseWriter, msg map[int]map[string]string, e
 	w.Write(message)
 }
 
-/* success response message */
+/*successmessagenonquery success response message */
 func successmessagenonquery(w http.ResponseWriter, msg interface{}, errorcode int) {
 	response := Responsenonquery{Status: "success", Data: msg}
 	message, _ := json.MarshalIndent(response, "", "\t")
@@ -579,7 +579,7 @@ func successmessagenonquery(w http.ResponseWriter, msg interface{}, errorcode in
 	w.Write(message)
 }
 
-/* error response message */
+/*errormessage error response message */
 func errormessage(w http.ResponseWriter, msg string, errorcode int) {
 	response := ErrorResponse{Code: errorcode, Message: msg}
 	message, _ := json.MarshalIndent(response, "", "\t")
@@ -588,7 +588,7 @@ func errormessage(w http.ResponseWriter, msg string, errorcode int) {
 	w.Write(message)
 }
 
-/* warning response message */
+/*warningmessage warning response message */
 func warningmessage(w http.ResponseWriter, msg string, errorcode int) {
 	response := ErrorResponse{Code: errorcode, Message: msg}
 	message, _ := json.MarshalIndent(response, "", "\t")
