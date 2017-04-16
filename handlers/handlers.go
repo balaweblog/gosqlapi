@@ -16,276 +16,94 @@ var (
 	ErrInvalidOutputResponse = errors.New("http: error formatting response")
 	//ErrParsingInputRequest Error Parsing Input Request
 	ErrParsingInputRequest = errors.New("http: error parsing input request")
+	//No records found
+	NoRecordsFound = errors.New("No Records found")
 )
 
-/*Createtable create table in sql */
-func Createtable(db *sql.DB) http.Handler {
+/*Showalldatabases Show all databases in the sql */
+func Showalldatabases(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		req, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
 		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(dat, "CREATE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("table created successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Createdb create db in sql */
-func Createdb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "CREATEDB")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("database created successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Showalltableindex create db in sql */
-func Showalltableindex(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "SHOWALLTABLEINDEX")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
-	})
-}
-
-/*Truncatetable  db in sql */
-func Truncatetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "TRUNCATE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("table truncated successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Droptable - drop table */
-func Droptable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "DROPTABLE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("table dropped successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Dropdatabase - drop database */
-func Dropdatabase(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "DROPDB")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("database dropped successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Selecttable select from table in sql */
-func Selecttable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "SELECT")
+		query := model.ParseQuery(dat, "SHOWDB")
 		val, err := model.ExecuteQuery(db, query)
+
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			errormessage(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if len(val) < 0 {
+			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
+		successmessagequery(w, val, http.StatusOK)
 	})
 }
 
-/*Listallusers select from table in sql */
-func Listallusers(db *sql.DB) http.Handler {
+/*CurrentInUseDB what database in use */
+func CurrentInUseDB(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		req, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 
-		if err != nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
 		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
+
+		query := model.ParseQuery(dat, "CURRENTDB")
+		val, err := model.ExecuteQuery(db, query)
+
 		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if len(val) < 0 {
+			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
+			return
+		}
+		successmessagequery(w, val, http.StatusOK)
+	})
+}
+
+/*ShowalltablesinDb show all tables in the database */
+func ShowalltablesinDb(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
-		query := model.ParseQuery(dat, "LISTALLUSERS")
+		var dat map[string]interface{}
+
+		query := model.ParseQuery(dat, "SHOWALLTABLES")
 		val, err := model.ExecuteQuery(db, query)
+
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			errormessage(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if len(val) < 0 {
+			warningmessage(w, NoRecordsFound.Error(), http.StatusNoContent)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
+		successmessagequery(w, val, http.StatusOK)
 	})
 }
 
@@ -296,269 +114,26 @@ func Altertable(db *sql.DB) http.Handler {
 		req, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
+		request, err := parserequest(req)
+
 		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
-		query := model.ParseQuery(dat, "ALTER")
+		query := model.ParseQuery(request.Data, "ALTER")
 		val, err := model.ExecuteQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("table altered successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Inserttable insert into table in sql */
-func Inserttable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "INSERT")
-		val, err := model.ExecuteNonQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("records inserted successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Updatetable update into table in sql */
-func Updatetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "UPDATE")
-		val, err := model.ExecuteNonQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("update records successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Deletetable delete into table in sql */
-func Deletetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "DELETE")
-		val, err := model.ExecuteNonQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if val != nil && err == nil {
-			output, _ := json.Marshal("deleted records successfully")
-			w.WriteHeader(http.StatusOK)
-			w.Write(output)
-		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-}
-
-/*Showalldatabases Show all databases in the sql */
-func Showalldatabases(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		_, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
 
 		if err != nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			errormessage(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "SHOWDB")
-		val, err := model.ExecuteQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
-	})
-}
-
-/*CurrentInUseDB what database in use */
-func CurrentInUseDB(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		_, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "CURRENTDB")
-		val, err := model.ExecuteQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
-	})
-}
-
-/*ShowalltablesinDb show all tables in the database */
-func ShowalltablesinDb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		_, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "SHOWALLTABLES")
-		val, err := model.ExecuteQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
-	})
-}
-
-/*Describetableindb describle individual table in the database */
-func Describetableindb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
-		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		query := model.ParseQuery(dat, "DESCTABLE")
-		val, err := model.ExecuteQuery(db, query)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
+		successmessagequery(w, val, http.StatusOK)
 	})
 }
 
@@ -569,30 +144,453 @@ func ExplaintableinDb(db *sql.DB) http.Handler {
 		req, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 
-		if err != nil || req == nil {
-			http.Error(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
-		var dat map[string]interface{}
-		err = json.Unmarshal(req, &dat)
+		request, err := parserequest(req)
+
 		if err != nil {
-			http.Error(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
 			return
 		}
 
-		query := model.ParseQuery(dat, "EXPLAINTABLE")
+		query := model.ParseQuery(request.Data, "EXPLAINTABLE")
 		val, err := model.ExecuteQuery(db, query)
+
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			errormessage(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		output, err := json.Marshal(val)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(output)
+		successmessagequery(w, val, http.StatusOK)
 	})
+}
+
+/*Describetableindb describle individual table in the database */
+func Describetableindb(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "DESCTABLE")
+		val, err := model.ExecuteQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagequery(w, val, http.StatusOK)
+	})
+}
+
+/*Selecttable select from table in sql */
+func Selecttable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "SELECT")
+		val, err := model.ExecuteQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagequery(w, val, http.StatusOK)
+	})
+}
+
+/*Listallusers select from table in sql */
+func Listallusers(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "LISTALLUSERS")
+		val, err := model.ExecuteQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagequery(w, val, http.StatusOK)
+	})
+}
+
+/*Createdb create db in sql */
+func Createdb(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+		query := model.ParseQuery(request.Data, "CREATEDB")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Dropdatabase - drop database */
+func Dropdatabase(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "DROPDB")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Createtable create table in sql */
+func Createtable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "CREATE")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Inserttable insert into table in sql */
+func Inserttable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "INSERT")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Updatetable update into table in sql */
+func Updatetable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "UPDATE")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Deletetable delete into table in sql */
+func Deletetable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "DELETE")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Droptable - drop table */
+func Droptable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "DROPTABLE")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Truncatetable  db in sql */
+func Truncatetable(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "TRUNCATE")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Showalltableindex create db in sql */
+func Showalltableindex(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		req, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+
+		if len(req) < 0 || err != nil {
+			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		request, err := parserequest(req)
+
+		if err != nil {
+			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+			return
+		}
+
+		query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
+		val, err := model.ExecuteNonQuery(db, query)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if err != nil {
+			errormessage(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		successmessagenonquery(w, val, http.StatusOK)
+	})
+}
+
+/*Response json object */
+type Responsequery struct {
+	Status string
+	Data   map[int]map[string]string
+}
+
+/*Response json object */
+type Responsenonquery struct {
+	Status string
+	Data   interface{}
+}
+type ErrorResponse struct {
+	Code    int
+	Message string
+}
+type Request struct {
+	Data map[string]interface{} `json:"data"`
+}
+
+func parserequest(req []byte) (Request, error) {
+	var request Request
+	err := json.Unmarshal(req, &request)
+	if err != nil {
+		return request, err
+	}
+	return request, nil
+}
+
+/* success response message */
+func successmessagequery(w http.ResponseWriter, msg map[int]map[string]string, errorcode int) {
+	response := Responsequery{Status: "success", Data: msg}
+	message, _ := json.MarshalIndent(response, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(errorcode)
+	w.Write(message)
+}
+
+/* success response message */
+func successmessagenonquery(w http.ResponseWriter, msg interface{}, errorcode int) {
+	response := Responsenonquery{Status: "success", Data: msg}
+	message, _ := json.MarshalIndent(response, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(errorcode)
+	w.Write(message)
+}
+
+/* error response message */
+func errormessage(w http.ResponseWriter, msg string, errorcode int) {
+	response := ErrorResponse{Code: errorcode, Message: msg}
+	message, _ := json.MarshalIndent(response, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(errorcode)
+	w.Write(message)
+}
+
+/* warning response message */
+func warningmessage(w http.ResponseWriter, msg string, errorcode int) {
+	response := ErrorResponse{Code: errorcode, Message: msg}
+	message, _ := json.MarshalIndent(response, "", "\t")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(errorcode)
+	w.Write(message)
 }

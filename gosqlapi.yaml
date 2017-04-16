@@ -1,0 +1,784 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Go SQL API
+  description: Take your model out of application. Use Go SQL api to query the database.
+  version: "1.0.0"
+# the domain of the service
+host: gosqlapi.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /showalldatabases:
+    post:
+      summary: Show All Databases
+      description: The show all databases endpoint returns information about all the databases in the server.
+      tags:
+        - databases
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                  "0":{
+                    "Database":"db1"
+                  },
+                  "1":{
+                    "Database":"db2"
+                  }
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /currentdb:
+    post:
+      summary: Current db in use
+      description: List the current in use db.
+      tags:
+        - databases
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                  "0":{
+                    "database()":"db1"
+                  }
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /showalltables:
+    post:
+      summary: Show all the tables
+      description: List all the tables in the database.
+      tags:
+        - databases
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                  "0":{
+                    "tables_in_database":"employee"
+                  },
+                  "1":{
+                    "tables_in_database":"master"
+                  }
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /altertable:
+    post:
+      summary: Alter a table in the database.
+      description: Alter a table in the connected database.
+      x-examples:
+        application/json: |-
+          {
+            "data":
+                {
+                  "table":"employee",
+                  "column":[
+                      {
+                        "0":"name",
+                        "1":"age"
+                      }
+                    ],
+                  "properties":[
+                    {
+                      "name": "varchar(20)",
+                      "age":"int not null"
+                    }
+                    ]
+                }
+          }
+      tags:
+        - tables
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /describetable:
+    post:
+      summary: describe table
+      description: describe table in the database
+      x-examples:
+        application/json: |-
+          {
+            "data":
+                {
+                  "table":"employee"
+                }
+          }
+      tags:
+        - tables
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "0":{
+                      "Default": "%!s(<nil>)",
+                      "Extra": "",
+                      "Field": "first",
+                      "Key": "",
+                      "Null": "YES",
+                      "Type": "varchar(30)"
+                    }
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /explaintable:
+    post:
+      summary: explain table
+      description: explain table in the database
+      x-examples:
+        application/json: |-
+          {
+            "data":
+                {
+                  "table":"employee"
+                }
+          }
+      tags:
+        - tables
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "0": {
+                      "Extra": "%!s(<nil>)",
+                      "filtered": "100.00",
+                      "id": "1",
+                      "key": "%!s(<nil>)",
+                      "key_len": "%!s(<nil>)",
+                      "partitions": "%!s(<nil>)",
+                      "possible_keys": "%!s(<nil>)",
+                      "ref": "%!s(<nil>)",
+                      "rows": "23",
+                      "select_type": "SIMPLE",
+                      "table": "employee24",
+                      "type": "ALL"
+                     }
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /selecttable:
+    post:
+      summary: select from table
+      description: select columns from table.
+      x-examples:
+        application/json: |-
+            {
+            	"data": {
+            		"table": "welcome",
+            		"column": [{
+            			"0": "*"
+            		}],
+            		"where": [{
+            				"StartTag": "(",
+            				"LHS": "name",
+            				"Operator": "=",
+            				"RHS": "'balamurugan'",
+            				"NextOp": "AND",
+            				"EndTag": ""
+            			},
+            			{
+            				"StartTag": "",
+            				"LHS": "age",
+            				"Operator": ">",
+            				"RHS": "2",
+            				"NextOp": "",
+            				"EndTag": ")"
+            			}
+            		]
+            	}
+            }
+      tags:
+        - tables
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /listallusers:
+    post:
+      summary: list all users
+      description: list all users from the database
+      tags:
+        - tables
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                       "0": {
+                          "HOST": "%",
+                          "USER": "bala"
+                        },
+                        "1": {
+                          "HOST": "%",
+                          "USER": "root"
+                        }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /createdb:
+    post:
+      summary: create db
+      description: create database in the localhost
+      tags:
+        - databases
+      x-examples:
+        application/json: |-
+            {
+            	"data": {
+            	    	"database": "masterinformation"
+              }
+            }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /dropdatabase:
+    post:
+      summary: drop database
+      description: drop database in the localhost
+      tags:
+        - databases
+      x-examples:
+        application/json: |-
+            {
+            	"data": {
+            	    	"database": "masterinformation"
+              }
+            }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /createtable:
+    post:
+      summary: create table
+      description: create table in the database.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+            {
+              	"data": {
+              		"table": "employee",
+              		"column": [{
+              			"first": "varchar(30) not null"
+              		}, {
+              			"second": "int not null"
+              		}],
+              		"properties": [{
+              			"primary": "second,first"
+              		}]
+              	}
+            }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /inserttable:
+    post:
+      summary: insert table
+      description: insert records to the table.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+            {
+              {
+              	"data": {
+              		"table": "employee",
+              		"column": [{
+              			"name11": "'balamurugan'",
+              			"age1": "22"
+              		}]
+              	}
+              }
+            }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /updatetable:
+    post:
+      summary: update table
+      description: update records to the table.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+          {
+          	"data":
+          	{
+          		"table": "welcome",
+          		"column": [{
+          			"name": "'rtest'",
+          			"age": "1"
+          		}],
+          		"where": [{
+          			"StartTag": "",
+          			"LHS": "name",
+          			"Operator": "=",
+          			"RHS": "'balamurugan'",
+          			"NextOp": "",
+          			"EndTag": ""
+          		}]
+          	}
+          }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /deletetable:
+    post:
+      summary: delete table
+      description: delete records in table.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+         {
+          	"data": {
+          		"table": "welcome",
+          		"where": [{
+          			"StartTag": "",
+          			"LHS": "name",
+          			"Operator": "=",
+          			"RHS": "'balamurugan'",
+          			"NextOp": "",
+          			"EndTag": ""
+          		}]
+          	}
+          }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /droptable:
+    post:
+      summary: drop table
+      description: drop table in the database.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+          {
+          	"data": {
+          		"table": "welcome"
+          	}
+          }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /truncatetable:
+    post:
+      summary: truncate table
+      description: truncate table in the database.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+          {
+          	"data": {
+          		"table": "welcome"
+          	}
+          }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /showalltableindex:
+    post:
+      summary: show all table index
+      description: show all table index in the database.
+      tags:
+        - tables
+      x-examples:
+        application/json: |-
+          {
+          	"data": {
+          		"table": "welcome"
+          	}
+          }
+      responses:
+        200:
+          description: Response output
+          schema:
+            $ref: '#/definitions/Responsequery'
+          examples:
+            application/json: |-
+              {
+                "Status":"success",
+                "Data":{
+                    "Locker":{}
+                }
+              }
+        400:
+          description: Bad Input Request Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+definitions:
+  Responsequery:
+    type: object
+    properties:
+      status:
+        type: string
+        description: Status of output response. Usually it will return success.
+      data:
+        type: object
+        description: map of int and map of string with string.
+        additionalProperties: {
+            "$ref": "#/definitions/MapOuterItems"
+        }
+  MapOuterItems:
+    type: object
+    properties:
+      Item1:
+        type: integer
+        description: a unique id to each rows to the map
+      Item2:
+        type: object
+        description: map of string values
+        additionalProperties: {
+            "$ref": "#/definitions/MapInnerItems"
+        }
+  MapInnerItems:
+      type: object
+      properties:
+        Item1:
+          type: string
+          description: row key
+        Item2:
+          type: string
+          description: row value
+  ErrorResponse:
+    properties:
+      Code:
+        type: integer
+        description: http error code.
+      Message:
+        type: string
+        description: meaniningful error messages
