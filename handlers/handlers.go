@@ -542,15 +542,18 @@ type Responsenonquery struct {
 	Status string
 	Data   interface{}
 }
+
 /*ErrorResponse error repsonse */
 type ErrorResponse struct {
 	Code    int
 	Message string
 }
+
 /*Request  input request json*/
 type Request struct {
 	Data map[string]interface{} `json:"data"`
 }
+
 /*parserequest -parse input request*/
 func parserequest(req []byte) (Request, error) {
 	var request Request
