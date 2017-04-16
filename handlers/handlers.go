@@ -531,25 +531,27 @@ func Showalltableindex(db *sql.DB) http.Handler {
 	})
 }
 
-/*Response json object */
+/*Responsequery Response json object */
 type Responsequery struct {
 	Status string
 	Data   map[int]map[string]string
 }
 
-/*Response json object */
+/*Responsenonquery Response json object */
 type Responsenonquery struct {
 	Status string
 	Data   interface{}
 }
+/*ErrorResponse error repsonse */
 type ErrorResponse struct {
 	Code    int
 	Message string
 }
+/*Request */
 type Request struct {
 	Data map[string]interface{} `json:"data"`
 }
-
+/*parserequest */
 func parserequest(req []byte) (Request, error) {
 	var request Request
 	err := json.Unmarshal(req, &request)
