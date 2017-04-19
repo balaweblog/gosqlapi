@@ -35,7 +35,7 @@ func Showalldatabases(db *sql.DB) http.Handler {
 		var dat map[string]interface{}
 
 		query := model.ParseQuery(dat, "SHOWDB")
-		writequeryresponse(db, query)
+		writequeryresponse(w, db, query)
 	})
 }
 
@@ -54,8 +54,7 @@ func CurrentInUseDB(db *sql.DB) http.Handler {
 		var dat map[string]interface{}
 
 		query := model.ParseQuery(dat, "CURRENTDB")
-		val, err := model.ExecuteQuery(db, query)
-		writequeryresponse(db, query)
+		writequeryresponse(w, db, query)
 	})
 }
 
@@ -74,7 +73,7 @@ func ShowalltablesinDb(db *sql.DB) http.Handler {
 		var dat map[string]interface{}
 
 		query := model.ParseQuery(dat, "SHOWALLTABLES")
-		writequeryresponse(db, query)
+		writequeryresponse(w, db, query)
 	})
 }
 
@@ -82,23 +81,12 @@ func ShowalltablesinDb(db *sql.DB) http.Handler {
 func Altertable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "ALTER")
-		writequeryresponse(db, query)
+			query := model.ParseQuery(request.Data, "ALTER")
+			writequeryresponse(w, db, query)
+		}
 	})
 }
 
@@ -106,23 +94,11 @@ func Altertable(db *sql.DB) http.Handler {
 func ExplaintableinDb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "EXPLAINTABLE")
+			writequeryresponse(w, db, query)
 		}
-
-		query := model.ParseQuery(request.Data, "EXPLAINTABLE")
-		writequeryresponse(db, query)
 	})
 }
 
@@ -130,23 +106,12 @@ func ExplaintableinDb(db *sql.DB) http.Handler {
 func Describetableindb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "DESCTABLE")
-		writequeryresponse(db, query)
+			query := model.ParseQuery(request.Data, "DESCTABLE")
+			writequeryresponse(w, db, query)
+		}
 	})
 }
 
@@ -154,23 +119,11 @@ func Describetableindb(db *sql.DB) http.Handler {
 func Selecttable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "SELECT")
+			writequeryresponse(w, db, query)
 		}
-
-		query := model.ParseQuery(request.Data, "SELECT")
-		writequeryresponse(db, query)
 	})
 }
 
@@ -178,23 +131,12 @@ func Selecttable(db *sql.DB) http.Handler {
 func Listallusers(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "LISTALLUSERS")
-		writequeryresponse(db, query)
+			query := model.ParseQuery(request.Data, "LISTALLUSERS")
+			writequeryresponse(w, db, query)
+		}
 	})
 }
 
@@ -202,22 +144,11 @@ func Listallusers(db *sql.DB) http.Handler {
 func Createdb(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "CREATEDB")
+			writenonqueryresponse(w, db, query)
 		}
-		query := model.ParseQuery(request.Data, "CREATEDB")
-		writenonqueryresponse(db, query)
 
 	})
 }
@@ -226,23 +157,12 @@ func Createdb(db *sql.DB) http.Handler {
 func Dropdatabase(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "DROPDB")
-		writenonqueryresponse(db, query)
+			query := model.ParseQuery(request.Data, "DROPDB")
+			writenonqueryresponse(w, db, query)
+		}
 	})
 }
 
@@ -250,23 +170,11 @@ func Dropdatabase(db *sql.DB) http.Handler {
 func Createtable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "CREATE")
+			writenonqueryresponse(w, db, query)
 		}
-
-		query := model.ParseQuery(request.Data, "CREATE")
-		writenonqueryresponse(db, query)
 	})
 }
 
@@ -274,23 +182,12 @@ func Createtable(db *sql.DB) http.Handler {
 func Inserttable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "INSERT")
-		writenonqueryresponse(db, query)
+			query := model.ParseQuery(request.Data, "INSERT")
+			writenonqueryresponse(w, db, query)
+		}
 	})
 }
 
@@ -298,23 +195,12 @@ func Inserttable(db *sql.DB) http.Handler {
 func Updatetable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "UPDATE")
-		writenonqueryresponse(db, query)
+			query := model.ParseQuery(request.Data, "UPDATE")
+			writenonqueryresponse(w, db, query)
+		}
 	})
 }
 
@@ -322,23 +208,12 @@ func Updatetable(db *sql.DB) http.Handler {
 func Deletetable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "DELETE")
-		writenonqueryresponse(db, query)
+			query := model.ParseQuery(request.Data, "DELETE")
+			writenonqueryresponse(w, db, query)
+		}
 	})
 }
 
@@ -346,23 +221,11 @@ func Deletetable(db *sql.DB) http.Handler {
 func Droptable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "DROPTABLE")
+			writenonqueryresponse(w, db, query)
 		}
-
-		query := model.ParseQuery(request.Data, "DROPTABLE")
-		writenonqueryresponse(db, query)
 	})
 }
 
@@ -370,23 +233,11 @@ func Droptable(db *sql.DB) http.Handler {
 func Truncatetable(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
+			query := model.ParseQuery(request.Data, "TRUNCATE")
+			writenonqueryresponse(w, db, query)
 		}
-
-		query := model.ParseQuery(request.Data, "TRUNCATE")
-		writenonqueryresponse(db, query)
 	})
 }
 
@@ -394,23 +245,12 @@ func Truncatetable(db *sql.DB) http.Handler {
 func Showalltableindex(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		request, err := parserequest(req)
-
+		request, err := readrequest(w, r)
 		if err != nil {
-			errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
 
-		query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
-		writenonqueryresponse(db, query)
+			query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
+			writenonqueryresponse(w, db, query)
+		}
 	})
 }
 
@@ -484,7 +324,7 @@ func warningmessage(w http.ResponseWriter, msg string, errorcode int) {
 }
 
 /*writequeryresponse write response */
-func writequeryresponse(db *sql.DB, query string) {
+func writequeryresponse(w http.ResponseWriter, db *sql.DB, query string) {
 	val, err := model.ExecuteQuery(db, query)
 
 	if err != nil {
@@ -499,7 +339,7 @@ func writequeryresponse(db *sql.DB, query string) {
 }
 
 /* writenonqueryresponse non query response */
-func writenonqueryresponse(db *sql.DB, query string) {
+func writenonqueryresponse(w http.ResponseWriter, db *sql.DB, query string) {
 	val, err := model.ExecuteNonQuery(db, query)
 
 	if err != nil {
@@ -507,4 +347,24 @@ func writenonqueryresponse(db *sql.DB, query string) {
 		return
 	}
 	successmessagenonquery(w, val, http.StatusOK)
+}
+
+/*readrequest read */
+func readrequest(w http.ResponseWriter, r *http.Request) (Request, error) {
+	req, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	var request Request
+
+	if len(req) < 0 || err != nil {
+		errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
+		return request, err
+	}
+
+	request, err = parserequest(req)
+
+	if err != nil {
+		errormessage(w, ErrParsingInputRequest.Error(), http.StatusBadRequest)
+		return request, err
+	}
+	return request, err
 }
