@@ -35,17 +35,7 @@ func Showalldatabases(db *sql.DB) http.Handler {
 		var dat map[string]interface{}
 
 		query := model.ParseQuery(dat, "SHOWDB")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if len(val) < 0 {
-			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -65,16 +55,7 @@ func CurrentInUseDB(db *sql.DB) http.Handler {
 
 		query := model.ParseQuery(dat, "CURRENTDB")
 		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if len(val) < 0 {
-			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -93,17 +74,7 @@ func ShowalltablesinDb(db *sql.DB) http.Handler {
 		var dat map[string]interface{}
 
 		query := model.ParseQuery(dat, "SHOWALLTABLES")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if len(val) < 0 {
-			warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -127,13 +98,7 @@ func Altertable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "ALTER")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -157,13 +122,7 @@ func ExplaintableinDb(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "EXPLAINTABLE")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -187,13 +146,7 @@ func Describetableindb(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "DESCTABLE")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -217,13 +170,7 @@ func Selecttable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "SELECT")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -247,13 +194,7 @@ func Listallusers(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "LISTALLUSERS")
-		val, err := model.ExecuteQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagequery(w, val, http.StatusOK)
+		writequeryresponse(db, query)
 	})
 }
 
@@ -276,13 +217,8 @@ func Createdb(db *sql.DB) http.Handler {
 			return
 		}
 		query := model.ParseQuery(request.Data, "CREATEDB")
-		val, err := model.ExecuteNonQuery(db, query)
+		writenonqueryresponse(db, query)
 
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
 	})
 }
 
@@ -306,13 +242,7 @@ func Dropdatabase(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "DROPDB")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -336,13 +266,7 @@ func Createtable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "CREATE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -366,13 +290,7 @@ func Inserttable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "INSERT")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -396,13 +314,7 @@ func Updatetable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "UPDATE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -426,13 +338,7 @@ func Deletetable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "DELETE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -456,13 +362,7 @@ func Droptable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "DROPTABLE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -486,13 +386,7 @@ func Truncatetable(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "TRUNCATE")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -516,18 +410,7 @@ func Showalltableindex(db *sql.DB) http.Handler {
 		}
 
 		query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
-		val, err := model.ExecuteNonQuery(db, query)
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if err != nil {
-			errormessage(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		successmessagenonquery(w, val, http.StatusOK)
+		writenonqueryresponse(db, query)
 	})
 }
 
@@ -598,4 +481,30 @@ func warningmessage(w http.ResponseWriter, msg string, errorcode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(errorcode)
 	w.Write(message)
+}
+
+/*writequeryresponse write response */
+func writequeryresponse(db *sql.DB, query string) {
+	val, err := model.ExecuteQuery(db, query)
+
+	if err != nil {
+		errormessage(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if len(val) < 0 {
+		warningmessage(w, ErrNoRecordsFound.Error(), http.StatusNoContent)
+		return
+	}
+	successmessagequery(w, val, http.StatusOK)
+}
+
+/* writenonqueryresponse non query response */
+func writenonqueryresponse(db *sql.DB, query string) {
+	val, err := model.ExecuteNonQuery(db, query)
+
+	if err != nil {
+		errormessage(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	successmessagenonquery(w, val, http.StatusOK)
 }
