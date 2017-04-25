@@ -22,7 +22,7 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-/* Index  index get method */
+/*Index  index get method */
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World!")
 }

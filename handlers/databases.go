@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-/*CreateddbPost - create db */
+/*CreatedbPost - create db */
 func CreatedbPost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
@@ -41,7 +41,7 @@ func ShowalldatabasesPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/*showalltablesPost - show all tables */
+/*ShowalltablesPost - show all tables */
 func ShowalltablesPost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
@@ -49,6 +49,6 @@ func ShowalltablesPost(w http.ResponseWriter, r *http.Request) {
 		writequeryresponse(w, query)
 	}
 }
-
+/*Databases - databases struct */
 type Databases struct {
 }
