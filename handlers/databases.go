@@ -49,6 +49,7 @@ func ShowalltablesPost(w http.ResponseWriter, r *http.Request) {
 		writequeryresponse(w, query)
 	}
 }
+
 /*Databases - databases struct */
 type Databases struct {
 }

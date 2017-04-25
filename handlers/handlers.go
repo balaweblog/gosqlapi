@@ -31,7 +31,7 @@ type Responsenonquery struct {
 	Data   interface{}
 }
 
-/*ErrorResponse error repsonse */
+/*ErrorResponse error response */
 type ErrorResponse struct {
 	Code    int
 	Message string

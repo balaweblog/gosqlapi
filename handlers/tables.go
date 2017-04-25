@@ -112,6 +112,7 @@ func UpdatetablePost(w http.ResponseWriter, r *http.Request) {
 		writenonqueryresponse(w, query)
 	}
 }
+
 /*Tables - table struct */
 type Tables struct {
 }
