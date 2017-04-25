@@ -1,13 +1,12 @@
 package routers
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"gosqlapi/handlers"
+	"gosqlapi/logger"
 	"net/http"
-    "gosqlapi/logger"
-    "fmt"
 )
-
 
 /*NewRouter  Routers new router */
 func NewRouter() *mux.Router {

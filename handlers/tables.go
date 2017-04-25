@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"gosqlapi/model"
 	"net/http"
-    "gosqlapi/model"
 )
 
 /*AltertablePost - alter table  */
@@ -37,7 +37,7 @@ func DescribetablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "DESCTABLE")
-		writequeryresponse(w,  query)
+		writequeryresponse(w, query)
 	}
 }
 
@@ -46,7 +46,7 @@ func DroptablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "DROPTABLE")
-		writenonqueryresponse(w,  query)
+		writenonqueryresponse(w, query)
 	}
 }
 
@@ -55,7 +55,7 @@ func ExplaintablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "EXPLAINTABLE")
-		writequeryresponse(w,  query)
+		writequeryresponse(w, query)
 	}
 }
 
@@ -64,7 +64,7 @@ func InserttablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "INSERT")
-		writenonqueryresponse(w,  query)
+		writenonqueryresponse(w, query)
 	}
 }
 
@@ -73,7 +73,7 @@ func ListallusersPost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "LISTALLUSERS")
-		writequeryresponse(w,  query)
+		writequeryresponse(w, query)
 	}
 }
 
@@ -82,7 +82,7 @@ func SelecttablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "SELECT")
-		writequeryresponse(w,  query)
+		writequeryresponse(w, query)
 	}
 }
 
@@ -91,7 +91,7 @@ func ShowalltableindexPost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
-		writenonqueryresponse(w,  query)
+		writenonqueryresponse(w, query)
 	}
 }
 
@@ -100,7 +100,7 @@ func TruncatetablePost(w http.ResponseWriter, r *http.Request) {
 	request, err := readrequest(w, r)
 	if err != nil {
 		query := model.ParseQuery(request.Data, "TRUNCATE")
-		writenonqueryresponse(w,  query)
+		writenonqueryresponse(w, query)
 	}
 }
 

@@ -1,8 +1,9 @@
 package routers
 
-import(
-    "net/http"
+import (
+	"net/http"
 )
+
 type Routes []Route
 
 type Route struct {

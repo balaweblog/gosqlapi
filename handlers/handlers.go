@@ -110,7 +110,7 @@ func writequeryresponse(w http.ResponseWriter, query string) {
 }
 
 /* writenonqueryresponse non query response */
-func writenonqueryresponse(w http.ResponseWriter,  query string) {
+func writenonqueryresponse(w http.ResponseWriter, query string) {
 	db, err := model.NewConnection()
 	defer db.Close()
 	if err != nil {
