@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"gosqlapi/model"
@@ -19,240 +18,6 @@ var (
 	//ErrNoRecordsFound No records found
 	ErrNoRecordsFound = errors.New("No Records found")
 )
-
-/*Showalldatabases Show all databases in the sql */
-func Showalldatabases(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "SHOWDB")
-		writequeryresponse(w, db, query)
-	})
-}
-
-/*CurrentInUseDB what database in use */
-func CurrentInUseDB(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "CURRENTDB")
-		writequeryresponse(w, db, query)
-	})
-}
-
-/*ShowalltablesinDb show all tables in the database */
-func ShowalltablesinDb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		req, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-
-		if len(req) < 0 || err != nil {
-			errormessage(w, ErrInvalidInputRequest.Error(), http.StatusBadRequest)
-			return
-		}
-
-		var dat map[string]interface{}
-
-		query := model.ParseQuery(dat, "SHOWALLTABLES")
-		writequeryresponse(w, db, query)
-	})
-}
-
-/*Altertable alter table and columns in  sql */
-func Altertable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "ALTER")
-			writequeryresponse(w, db, query)
-		}
-	})
-}
-
-/*ExplaintableinDb explain table in sql */
-func ExplaintableinDb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "EXPLAINTABLE")
-			writequeryresponse(w, db, query)
-		}
-	})
-}
-
-/*Describetableindb describle individual table in the database */
-func Describetableindb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "DESCTABLE")
-			writequeryresponse(w, db, query)
-		}
-	})
-}
-
-/*Selecttable select from table in sql */
-func Selecttable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "SELECT")
-			writequeryresponse(w, db, query)
-		}
-	})
-}
-
-/*Listallusers select from table in sql */
-func Listallusers(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "LISTALLUSERS")
-			writequeryresponse(w, db, query)
-		}
-	})
-}
-
-/*Createdb create db in sql */
-func Createdb(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "CREATEDB")
-			writenonqueryresponse(w, db, query)
-		}
-
-	})
-}
-
-/*Dropdatabase - drop database */
-func Dropdatabase(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "DROPDB")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Createtable create table in sql */
-func Createtable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "CREATE")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Inserttable insert into table in sql */
-func Inserttable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "INSERT")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Updatetable update into table in sql */
-func Updatetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "UPDATE")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Deletetable delete into table in sql */
-func Deletetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "DELETE")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Droptable - drop table */
-func Droptable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "DROPTABLE")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Truncatetable  db in sql */
-func Truncatetable(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-			query := model.ParseQuery(request.Data, "TRUNCATE")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
-
-/*Showalltableindex create db in sql */
-func Showalltableindex(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		request, err := readrequest(w, r)
-		if err != nil {
-
-			query := model.ParseQuery(request.Data, "SHOWALLTABLEINDEX")
-			writenonqueryresponse(w, db, query)
-		}
-	})
-}
 
 /*Responsequery Response json object */
 type Responsequery struct {
@@ -324,7 +89,13 @@ func warningmessage(w http.ResponseWriter, msg string, errorcode int) {
 }
 
 /*writequeryresponse write response */
-func writequeryresponse(w http.ResponseWriter, db *sql.DB, query string) {
+func writequeryresponse(w http.ResponseWriter, query string) {
+	db, err := model.NewConnection()
+	defer db.Close()
+	if err != nil {
+		errormessage(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	val, err := model.ExecuteQuery(db, query)
 
 	if err != nil {
@@ -339,7 +110,13 @@ func writequeryresponse(w http.ResponseWriter, db *sql.DB, query string) {
 }
 
 /* writenonqueryresponse non query response */
-func writenonqueryresponse(w http.ResponseWriter, db *sql.DB, query string) {
+func writenonqueryresponse(w http.ResponseWriter,  query string) {
+	db, err := model.NewConnection()
+	defer db.Close()
+	if err != nil {
+		errormessage(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	val, err := model.ExecuteNonQuery(db, query)
 
 	if err != nil {

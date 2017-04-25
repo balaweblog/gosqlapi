@@ -1,11 +1,11 @@
-package 
+package logger
 
 import (
     "log"
     "net/http"
     "time"
 )
-
+/*Logger log */
 func Logger(inner http.Handler, name string) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         start := time.Now()
