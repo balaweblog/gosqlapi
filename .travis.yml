@@ -1,0 +1,9 @@
+language: go
+
+go:
+  - 1.7
+  
+  before_install:
+  - go get github.com/onsi/gomega
+  
+  install: go get -v -u -t
