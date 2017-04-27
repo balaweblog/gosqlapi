@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"gosqlapi/model"
+	"github.com/balaweblog/gosqlapi/model"
 	"net/http"
 )
 

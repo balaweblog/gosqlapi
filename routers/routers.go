@@ -3,8 +3,8 @@ package routers
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"gosqlapi/handlers"
-	"gosqlapi/logger"
+	"github.com/balaweblog/gosqlapi/handlers"
+	"github.com/balaweblog/gosqlapi/logger"
 	"net/http"
 )
 

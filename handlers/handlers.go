@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"gosqlapi/model"
+	"github.com/balaweblog/gosqlapi/model"
 	"io/ioutil"
 	"net/http"
 )
