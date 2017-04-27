@@ -8,6 +8,10 @@ go:
     - tip
 
 before_install:
+    - go get github.com/balaweblog/gosqlapi/model
+    - go get github.com/balaweblog/gosqlapi/handlers
+    - go get github.com/balaweblog/gosqlapi/logger
+    - go get github.com/balaweblog/gosqlapi/routers
     - go get github.com/gorilla/mux
     - go get github.com/go-sql-driver/mysql
 
