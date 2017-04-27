@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gosqlapi/routers"
+	"github.com/balaweblog/gosqlapi/routers"
 	"log"
 	"net/http"
 )
